@@ -1,0 +1,56 @@
+﻿@page "/todoitems"
+@using Application.DTOs;
+@using Application.Interfaces;
+@inject ITodoService TodoService
+
+<h3>Todo Items</h3>
+
+<p>
+    <button class="btn btn-primary" @onclick="AddTodoItem">Add Todo Item</button>
+</p>
+
+@if (todoItems == null)
+{
+    <p><em>Loading...</em></p>
+}
+else
+{
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Title</th>
+                <th>Status</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in todoItems)
+            {
+                <tr>
+                    <td>@item.Title</td>
+                    <td>@(item.IsCompleted ? "Completed" : "Not Completed")</td>
+                    <td>
+                        <button class="btn btn-info">Edit</button>
+                        <button class="btn btn-danger">Delete</button>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+
+@code {
+    private List<TodoItemDto>? todoItems;
+
+    protected override async Task OnInitializedAsync()
+    {
+        todoItems = (await TodoService.GetAllTodoItemsAsync()).ToList();
+    }
+
+    private async void AddTodoItem()
+    {
+        var newItem = new TodoItemDto { Title = "New Todo Item", IsCompleted = false };
+        await TodoService.CreateTodoItemAsync(newItem);
+        todoItems = (await TodoService.GetAllTodoItemsAsync()).ToList();
+    }
+}
