@@ -44,4 +44,59 @@ This example demonstrates the basic concepts of Clean Architecture, focusing on 
 4. **Validation**: Implementing validation mechanisms at different layers, such as using FluentValidation to validate input data and applying domain-specific validation rules in the Domain layer.
 5. **Unit and Integration Testing**: Writing unit and integration tests for the different layers of the application to ensure its correctness and stability during development and maintenance.
 
+## Using MediatR for Command and Query Handling
 
+The application has been updated to use MediatR, a popular library for implementing the Mediator pattern, to handle commands and queries. This new approach promotes loose coupling and makes the application more maintainable and easier to test. Here's a summary of how MediatR is integrated into the application:
+
+1. **UI Layer**: The UI components now send commands and queries to the Application layer using the `IMediator` interface. The `IMediator` instance is provided to the UI components through dependency injection.
+
+2. **Commands and Queries**: Commands and queries are simple classes that encapsulate the input data and the desired operation. They are defined in the Application layer and are handled by corresponding command and query handlers.
+
+3. **Command and Query Handlers**: The handlers are classes that implement the `IRequestHandler` interface from MediatR. They are responsible for handling a specific command or query and contain the necessary logic to perform the operation. The handlers are located in the Application layer and use the `ITodoItemRepository` to interact with the Domain and Infrastructure layers.
+
+4. **MediatR Registration**: MediatR is registered in the `Program.cs` file of the UI project. The `AddMediatR` extension method is used to scan the Application assembly for defined command and query handlers, and it automatically registers them with the dependency injection container.
+
+The following code snippet shows an example of a command, a query, and their respective handlers:
+
+```csharp
+// A command to create a new Todo item
+public record CreateTodoItemCommand(TodoItem TodoItem) : IRequest<Guid>;
+
+// The handler for the CreateTodoItemCommand
+public class CreateTodoItemCommandHandler : IRequestHandler<CreateTodoItemCommand, Guid>
+{
+    private readonly ITodoItemRepository _repository;
+
+    public CreateTodoItemCommandHandler(ITodoItemRepository repository)
+    {
+        _repository = repository;
+    }
+
+    public async Task<Guid> Handle(CreateTodoItemCommand request, CancellationToken cancellationToken)
+    {
+        await _repository.AddAsync(request.TodoItem);
+        return request.TodoItem.Id;
+    }
+}
+
+// A query to get all Todo items
+public record GetAllTodoItemsQuery() : IRequest<IEnumerable<TodoItem>>;
+
+// The handler for the GetAllTodoItemsQuery
+public class GetAllTodoItemsQueryHandler : IRequestHandler<GetAllTodoItemsQuery, IEnumerable<TodoItem>>
+{
+    private readonly ITodoItemRepository _repository;
+
+    public GetAllTodoItemsQueryHandler(ITodoItemRepository repository)
+    {
+        _repository = repository;
+    }
+
+    public async Task<IEnumerable<TodoItem>> Handle(GetAllTodoItemsQuery request, CancellationToken cancellationToken)
+    {
+        return await _repository.GetAllAsync();
+    }
+}
+```
+
+By using MediatR and the command/query pattern, the application's architecture is more organized and maintainable. Each command and query is self-contained and focused on a single responsibility, making it easier to understand the flow of data and logic within the application.
