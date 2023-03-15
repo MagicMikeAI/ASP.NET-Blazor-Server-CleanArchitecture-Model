@@ -1,56 +1,71 @@
 ﻿@page "/todoitems"
-@using Application.DTOs;
+@using Application.DTOs
+@using Application.Commands
 @using Application.Interfaces;
+@using Application.Queries
+@using Domain.Entities
+@using Microsoft.AspNetCore.Components
 @inject ITodoService TodoService
 
 <h3>Todo Items</h3>
 
-<p>
-    <button class="btn btn-primary" @onclick="AddTodoItem">Add Todo Item</button>
-</p>
+<div class="form-group">
+    <label for="title">Title:</label>
+    <input @bind="newTodoItem.Title" type="text" class="form-control" id="title">
+</div>
 
-@if (todoItems == null)
-{
-    <p><em>Loading...</em></p>
-}
-else
-{
-    <table class="table">
-        <thead>
+<button @onclick="AddTodoItemAsync" class="btn btn-primary">Add</button>
+
+<table class="table mt-4">
+    <thead>
+        <tr>
+            <th>Title</th>
+            <th>Status</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var todoItem in todoItems)
+        {
             <tr>
-                <th>Title</th>
-                <th>Status</th>
-                <th>Actions</th>
+                <td>@todoItem.Title</td>
+                <td>@(todoItem.IsCompleted ? "Completed" : "Pending")</td>
+                <td>
+                    <button @onclick="(() => UpdateTodoItemAsync(todoItem))" class="btn btn-primary btn-sm">Update</button>
+                    <button @onclick="(() => DeleteTodoItemAsync(todoItem.Id))" class="btn btn-danger btn-sm">Delete</button>
+                </td>
             </tr>
-        </thead>
-        <tbody>
-            @foreach (var item in todoItems)
-            {
-                <tr>
-                    <td>@item.Title</td>
-                    <td>@(item.IsCompleted ? "Completed" : "Not Completed")</td>
-                    <td>
-                        <button class="btn btn-info">Edit</button>
-                        <button class="btn btn-danger">Delete</button>
-                    </td>
-                </tr>
-            }
-        </tbody>
-    </table>
-}
+        }
+    </tbody>
+</table>
+
 
 @code {
-    private List<TodoItemDto>? todoItems;
+    private List<TodoItemDto> todoItems = new List<TodoItemDto>();
+    private TodoItemDto newTodoItem = new TodoItemDto();
 
     protected override async Task OnInitializedAsync()
     {
-        todoItems = (await TodoService.GetAllTodoItemsAsync()).ToList();
+        todoItems = (await TodoService.GetAllTodoItemsAsync(new GetAllTodoItemsQuery())).ToList();
     }
 
-    private async void AddTodoItem()
+    private async Task AddTodoItemAsync()
     {
-        var newItem = new TodoItemDto { Title = "New Todo Item", IsCompleted = false };
-        await TodoService.CreateTodoItemAsync(newItem);
-        todoItems = (await TodoService.GetAllTodoItemsAsync()).ToList();
+        await TodoService.CreateTodoItemAsync(new CreateTodoItemCommand(new TodoItem { Title = newTodoItem.Title }));
+        todoItems = (await TodoService.GetAllTodoItemsAsync(new GetAllTodoItemsQuery())).ToList();
+        newTodoItem = new TodoItemDto();
+    }
+
+    private async Task UpdateTodoItemAsync(TodoItemDto todoItem)
+    {
+        todoItem.IsCompleted = !todoItem.IsCompleted;
+        await TodoService.UpdateTodoItemAsync(new UpdateTodoItemCommand(todoItem.Id, todoItem.Title, todoItem.IsCompleted));
+    }
+
+    private async Task DeleteTodoItemAsync(Guid id)
+    {
+        await TodoService.DeleteTodoItemAsync(new DeleteTodoItemCommand(id));
+        todoItems = (await TodoService.GetAllTodoItemsAsync(new GetAllTodoItemsQuery())).ToList();
     }
 }
+

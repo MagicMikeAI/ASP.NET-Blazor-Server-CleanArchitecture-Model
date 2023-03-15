@@ -1,4 +1,7 @@
-﻿using Application.DTOs;
+﻿using Application.Commands;
+using Application.DTOs;
+using Application.Queries;
+using Domain.Entities;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,10 +12,11 @@ namespace Application.Interfaces
 {
     public interface ITodoService
     {
-        Task<IEnumerable<TodoItemDto>> GetAllTodoItemsAsync();
-        Task<TodoItemDto> GetTodoItemByIdAsync(int id);
-        Task<TodoItemDto> CreateTodoItemAsync(TodoItemDto todoItemDto);
-        Task UpdateTodoItemAsync(int id, TodoItemDto todoItemDto);
-        Task DeleteTodoItemAsync(int id);
+        Task CreateTodoItemAsync(CreateTodoItemCommand command);
+        Task UpdateTodoItemAsync(UpdateTodoItemCommand command);
+        Task DeleteTodoItemAsync(DeleteTodoItemCommand command);
+        Task<TodoItemDto> GetTodoItemByIdAsync(GetTodoItemByIdQuery query);
+        Task<IEnumerable<TodoItemDto>> GetAllTodoItemsAsync(GetAllTodoItemsQuery query);
     }
+
 }

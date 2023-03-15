@@ -1,14 +1,14 @@
-using Microsoft.AspNetCore.Components;
-using Microsoft.AspNetCore.Components.Web;
+
 using Application.Interfaces;
-using Application.Services;
 using Domain.Repositories;
 using Infrastructure.Data;
 using Infrastructure.Repositories;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Identity;
 using UI.Data;
-using Infrastructure.Data;
+using Application.Services;
+using Microsoft.Extensions.DependencyInjection;
+using MediatR;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -21,8 +21,14 @@ builder.Services.AddDbContext<ApplicationDbContext>(options =>
 builder.Services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = true)
     .AddEntityFrameworkStores<ApplicationDbContext>();
 
+
 builder.Services.AddScoped<ITodoItemRepository, TodoItemRepository>();
 builder.Services.AddScoped<ITodoService, TodoService>();
+builder.Services.AddMediatR(typeof(ITodoService).Assembly);
+
+
+
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.

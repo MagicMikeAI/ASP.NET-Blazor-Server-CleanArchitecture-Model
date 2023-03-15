@@ -6,10 +6,9 @@ using System.Threading.Tasks;
 
 namespace Application.DTOs
 {
-    public class TodoItemDto
+    public class CreateTodoItemDto
     {
-        public Guid Id { get; set; }
         public string? Title { get; set; }
-        public bool IsCompleted { get; set; }
+        public string? Description { get; set; }
     }
 }

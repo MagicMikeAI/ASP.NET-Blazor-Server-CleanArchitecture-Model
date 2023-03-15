@@ -24,7 +24,7 @@ namespace Infrastructure.Repositories
             return (IEnumerable<TodoItem>)await _context.TodoItems.ToListAsync();
         }
 
-        public async Task<TodoItem> GetByIdAsync(int id)
+        public async Task<TodoItem> GetByIdAsync(Guid id)
         {
             return await _context.TodoItems.FindAsync(id);
         }
@@ -42,7 +42,7 @@ namespace Infrastructure.Repositories
             await _context.SaveChangesAsync();
         }
 
-        public async Task DeleteAsync(int id)
+        public async Task DeleteAsync(Guid id)
         {
             var entity = await _context.TodoItems.FindAsync(id);
             _context.TodoItems.Remove(entity);
