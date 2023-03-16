@@ -100,3 +100,25 @@ public class GetAllTodoItemsQueryHandler : IRequestHandler<GetAllTodoItemsQuery,
 ```
 
 By using MediatR and the command/query pattern, the application's architecture is more organized and maintainable. Each command and query is self-contained and focused on a single responsibility, making it easier to understand the flow of data and logic within the application.
+
+
+## New Features Added
+
+The original implementation has been extended to include the following features:
+
+1. Categories: Todo items can now be associated with categories.
+2. Category Management: Users can create and manage categories through the UI.
+3. Todo Items with Categories: The list of Todo items now displays the associated category for each item.
+
+## Changes and Additions to the Architecture
+
+To accommodate these new features, the following changes and additions have been made to the architecture:
+
+1. **Domain Layer**: A new `Category` entity has been added to the Domain layer, representing a category that can be associated with a Todo item. The `TodoItem` entity has been updated to include a `CategoryId` property and a navigation property for the associated `Category` entity.
+
+2. **Application Layer**: The Application layer has been updated to include new commands and queries for category management, such as `CreateCategoryCommand`, `GetAllCategoriesQuery`, and their respective handlers. The `GetAllTodoItemsQuery` has been extended to retrieve Todo items with their associated categories.
+
+3. **Infrastructure Layer**: A new `ICategoryRepository` interface has been added to the Domain layer to define the contract for category data access operations. The Infrastructure layer now includes an implementation of this interface, `CategoryRepository`, which performs data access operations for the `Category` entity using Entity Framework Core.
+
+4. **UI Layer**: The UI layer has been updated to include new components for category management, such as `CreateCategory.razor` and `CategoryList.razor`. The `TodoItems.razor` component has been modified to display the associated category for each Todo item and to allow users to select a category when creating a new Todo item.
+
