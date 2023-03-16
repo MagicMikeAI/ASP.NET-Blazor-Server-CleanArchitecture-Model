@@ -110,7 +110,7 @@ The original implementation has been extended to include the following features:
 2. Category Management: Users can create and manage categories through the UI.
 3. Todo Items with Categories: The list of Todo items now displays the associated category for each item.
 
-## Changes and Additions to the Architecture
+## Changes and Additions to the Architecture and CQRS Update
 
 To accommodate these new features, the following changes and additions have been made to the architecture:
 
