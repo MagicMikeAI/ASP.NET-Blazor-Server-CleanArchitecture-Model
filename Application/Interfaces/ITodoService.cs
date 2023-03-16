@@ -1,6 +1,6 @@
-﻿using Application.Commands;
-using Application.DTOs;
-using Application.Queries;
+﻿using Application.Commands.Todo;
+using Application.DTOs.Todo;
+using Application.Queries.Todo;
 using Domain.Entities;
 using System;
 using System.Collections.Generic;
@@ -17,6 +17,7 @@ namespace Application.Interfaces
         Task DeleteTodoItemAsync(DeleteTodoItemCommand command);
         Task<TodoItemDto> GetTodoItemByIdAsync(GetTodoItemByIdQuery query);
         Task<IEnumerable<TodoItemDto>> GetAllTodoItemsAsync(GetAllTodoItemsQuery query);
+        Task<IEnumerable<TodoItemDto>> GetAllTodoItemsWithCategoryQuery(GetAllTodoItemsWithCategoryQuery query);
     }
 
 }

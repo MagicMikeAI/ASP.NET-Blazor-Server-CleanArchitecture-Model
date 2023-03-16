@@ -6,10 +6,15 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Application.Queries
+namespace Application.Commands.Todo
 {
-    public class GetTodoItemByIdQuery : IRequest<TodoItem>
+    public class DeleteTodoItemCommand : IRequest<Unit>
     {
         public Guid Id { get; set; }
+
+        public DeleteTodoItemCommand(Guid id)
+        {
+            Id = id;
+        }
     }
 }

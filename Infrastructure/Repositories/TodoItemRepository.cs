@@ -48,5 +48,11 @@ namespace Infrastructure.Repositories
             _context.TodoItems.Remove(entity);
             await _context.SaveChangesAsync();
         }
+
+        public async Task<IEnumerable<TodoItem>> GetAllWithCategoryAsync()
+        {
+            return await _context.TodoItems.Include(t => t.Category).ToListAsync();
+        }
+
     }
 }

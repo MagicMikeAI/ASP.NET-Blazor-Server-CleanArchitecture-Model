@@ -1,4 +1,4 @@
-﻿using Application.Commands;
+﻿using Application.Commands.Todo;
 using Domain.Repositories;
 using MediatR;
 using System;
@@ -7,7 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Application.Handlers.CommandHandlers
+namespace Application.Handlers.CommandHandlers.Todo
 {
     public class DeleteTodoItemHandler : IRequestHandler<DeleteTodoItemCommand, Unit>
     {

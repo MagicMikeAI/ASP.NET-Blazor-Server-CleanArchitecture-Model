@@ -27,6 +27,9 @@ builder.Services.AddScoped<ITodoService, TodoService>();
 builder.Services.AddMediatR(typeof(ITodoService).Assembly);
 
 
+builder.Services.AddScoped<ICategoryRepository, CategoryRepository>();
+builder.Services.AddScoped<ICategoryService, CategoryService>();
+builder.Services.AddMediatR(typeof(ICategoryService).Assembly);
 
 
 var app = builder.Build();

@@ -6,15 +6,17 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Application.Commands
+namespace Application.Commands.Todo
 {
     public class CreateTodoItemCommand : IRequest<Unit>
     {
         public TodoItem TodoItem { get; set; }
+        public Guid CategoryId { get; set; }
 
-        public CreateTodoItemCommand(TodoItem todoItem)
+        public CreateTodoItemCommand(TodoItem todoItem, Guid categoryId)
         {
             TodoItem = todoItem;
+            CategoryId = categoryId;
         }
     }
 

@@ -4,16 +4,14 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Domain.Entities
+namespace Application.DTOs.Todo
 {
-    public class TodoItem
+    public class TodoItemDto
     {
         public Guid Id { get; set; }
         public string? Title { get; set; }
         public bool IsCompleted { get; set; }
-
-        //Navigation Properties
         public Guid CategoryId { get; set; }
-        public Category? Category { get; set; }
+        public string? CategoryName { get; set; }
     }
 }

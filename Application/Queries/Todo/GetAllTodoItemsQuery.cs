@@ -8,7 +8,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Application.Queries
+namespace Application.Queries.Todo
 {
     public class GetAllTodoItemsQuery : IRequest<IEnumerable<TodoItem>>
     {

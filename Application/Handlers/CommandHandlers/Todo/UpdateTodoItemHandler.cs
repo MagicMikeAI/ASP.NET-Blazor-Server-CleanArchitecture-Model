@@ -1,4 +1,4 @@
-﻿using Application.Commands;
+﻿using Application.Commands.Todo;
 using Application.Exceptions;
 using Domain.Entities;
 using Domain.Repositories;
@@ -9,7 +9,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Application.Handlers.CommandHandlers
+namespace Application.Handlers.CommandHandlers.Todo
 {
     public class UpdateTodoItemHandler : IRequestHandler<UpdateTodoItemCommand, Unit>
     {

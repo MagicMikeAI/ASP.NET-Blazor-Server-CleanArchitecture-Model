@@ -14,5 +14,7 @@ namespace Domain.Repositories
         Task UpdateAsync(TodoItem entity);
         Task DeleteAsync(Guid id);
         Task<TodoItem> GetByIdAsync(Guid id);
+        Task<IEnumerable<TodoItem>> GetAllWithCategoryAsync();
+
     }
 }

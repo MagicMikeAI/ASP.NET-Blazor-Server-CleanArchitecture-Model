@@ -4,12 +4,11 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Application.DTOs
+namespace Application.DTOs.Category
 {
-    public class TodoItemDto
+    public class UpdateCategoryDto
     {
         public Guid Id { get; set; }
-        public string? Title { get; set; }
-        public bool IsCompleted { get; set; }
+        public string? Name { get; set; }
     }
 }

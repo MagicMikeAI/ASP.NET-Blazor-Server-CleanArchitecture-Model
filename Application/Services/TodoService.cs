@@ -1,7 +1,7 @@
-﻿using Application.Commands;
-using Application.DTOs;
+﻿using Application.Commands.Todo;
+using Application.DTOs.Todo;
 using Application.Interfaces;
-using Application.Queries;
+using Application.Queries.Todo;
 using Domain.Entities;
 using MediatR;
 
@@ -50,6 +50,18 @@ namespace Application.Services
                 Id = item.Id,
                 Title = item.Title,
                 IsCompleted = item.IsCompleted
+            });
+        }
+        public async Task<IEnumerable<TodoItemDto>> GetAllTodoItemsWithCategoryQuery(GetAllTodoItemsWithCategoryQuery query)
+        {
+            var todoItems = await _mediator.Send(query);
+            return todoItems.Select(item => new TodoItemDto
+            {
+                Id = item.Id,
+                Title = item.Title,
+                IsCompleted = item.IsCompleted,
+                CategoryId = item.CategoryId,
+                CategoryName = item.Category?.Name
             });
         }
     }

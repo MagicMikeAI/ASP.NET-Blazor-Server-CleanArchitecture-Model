@@ -1,25 +1,53 @@
 ﻿@page "/todoitems"
-@using Application.DTOs
-@using Application.Commands
+@using Application.Commands.Todo;
+@using Application.Commands.Category;
+@using Application.DTOs.Todo;
+@using Application.DTOs.Category;
 @using Application.Interfaces;
-@using Application.Queries
-@using Domain.Entities
-@using Microsoft.AspNetCore.Components
+@using Application.Queries.Todo;
+@using Application.Queries.Category;
+@using Domain.Entities;
+
 @inject ITodoService TodoService
+@inject ICategoryService CategoryService
 
 <h3>Todo Items</h3>
 
-<div class="form-group">
-    <label for="title">Title:</label>
-    <input @bind="newTodoItem.Title" type="text" class="form-control" id="title">
-</div>
+<div class="row">
 
-<button @onclick="AddTodoItemAsync" class="btn btn-primary">Add</button>
+    <div class="col-md-6">
+        <h4>Add Todo Item</h4>
+        <div class="form-group">
+            <label for="title">Title:</label>
+            <input @bind="newTodoItem.Title" type="text" class="form-control" id="title">
+        </div>
+        <div class="form-group">
+            <label for="category">Category:</label>
+            <select @bind="newTodoItem.CategoryId" class="form-control" id="category">
+                <option value="">Select a category</option>
+                @foreach (var category in categories)
+                {
+                    <option value="@category.Id">@category.Name</option>
+                }
+            </select>
+        </div>
+        <button @onclick="AddTodoItemAsync" class="btn btn-primary">Add</button>
+    </div>
+    <div class="col-md-6">
+        <h4>Add Category</h4>
+        <div class="form-group">
+            <label for="categoryName">Category Name:</label>
+            <input @bind="newCategory.Name" type="text" class="form-control" id="categoryName">
+        </div>
+        <button @onclick="AddCategoryAsync" class="btn btn-primary">Add Category</button>
+    </div>
+</div>
 
 <table class="table mt-4">
     <thead>
         <tr>
             <th>Title</th>
+            <th>Category</th>
             <th>Status</th>
             <th>Actions</th>
         </tr>
@@ -29,6 +57,7 @@
         {
             <tr>
                 <td>@todoItem.Title</td>
+                <td>@todoItem.CategoryName</td>
                 <td>@(todoItem.IsCompleted ? "Completed" : "Pending")</td>
                 <td>
                     <button @onclick="(() => UpdateTodoItemAsync(todoItem))" class="btn btn-primary btn-sm">Update</button>
@@ -39,19 +68,29 @@
     </tbody>
 </table>
 
-
 @code {
     private List<TodoItemDto> todoItems = new List<TodoItemDto>();
+    private List<CategoryDto> categories = new List<CategoryDto>();
     private TodoItemDto newTodoItem = new TodoItemDto();
+    private CreateCategoryDto newCategory = new CreateCategoryDto();
 
     protected override async Task OnInitializedAsync()
     {
-        todoItems = (await TodoService.GetAllTodoItemsAsync(new GetAllTodoItemsQuery())).ToList();
+        //todoItems = (await TodoService.GetAllTodoItemsAsync(new GetAllTodoItemsQuery())).ToList();
+        todoItems = (await TodoService.GetAllTodoItemsWithCategoryQuery(new GetAllTodoItemsWithCategoryQuery())).ToList();
+
+        categories = (await CategoryService.GetAllAsync()).ToList();
     }
 
+    private async Task AddCategoryAsync()
+    {
+        await CategoryService.CreateAsync(newCategory);
+        categories = (await CategoryService.GetAllAsync()).ToList();
+        newCategory = new CreateCategoryDto();
+    }
     private async Task AddTodoItemAsync()
     {
-        await TodoService.CreateTodoItemAsync(new CreateTodoItemCommand(new TodoItem { Title = newTodoItem.Title }));
+        await TodoService.CreateTodoItemAsync(new CreateTodoItemCommand(new TodoItem { Title = newTodoItem.Title }, newTodoItem.CategoryId));
         todoItems = (await TodoService.GetAllTodoItemsAsync(new GetAllTodoItemsQuery())).ToList();
         newTodoItem = new TodoItemDto();
     }
@@ -59,7 +98,7 @@
     private async Task UpdateTodoItemAsync(TodoItemDto todoItem)
     {
         todoItem.IsCompleted = !todoItem.IsCompleted;
-        await TodoService.UpdateTodoItemAsync(new UpdateTodoItemCommand(todoItem.Id, todoItem.Title, todoItem.IsCompleted));
+        await TodoService.UpdateTodoItemAsync(new UpdateTodoItemCommand(todoItem.Id, todoItem.Title, todoItem.IsCompleted, todoItem.CategoryId));
     }
 
     private async Task DeleteTodoItemAsync(Guid id)
@@ -68,4 +107,5 @@
         todoItems = (await TodoService.GetAllTodoItemsAsync(new GetAllTodoItemsQuery())).ToList();
     }
 }
+
 
