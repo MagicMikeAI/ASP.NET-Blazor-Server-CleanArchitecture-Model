@@ -17,7 +17,7 @@ namespace Application.Interfaces
         Task DeleteTodoItemAsync(DeleteTodoItemCommand command);
         Task<TodoItemDto> GetTodoItemByIdAsync(GetTodoItemByIdQuery query);
         Task<IEnumerable<TodoItemDto>> GetAllTodoItemsAsync(GetAllTodoItemsQuery query);
-        Task<IEnumerable<TodoItemDto>> GetAllTodoItemsWithCategoryQuery(GetAllTodoItemsWithCategoryQuery query);
+        Task<IEnumerable<TodoItemDto>> GetAllTodoItemsWithCategoryAsync(GetAllTodoItemsWithCategoryQuery query);
     }
 
 }

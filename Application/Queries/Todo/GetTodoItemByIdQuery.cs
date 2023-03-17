@@ -1,4 +1,5 @@
-﻿using Domain.Entities;
+﻿using Application.DTOs.Todo;
+using Domain.Entities;
 using MediatR;
 using System;
 using System.Collections.Generic;
@@ -8,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace Application.Queries.Todo
 {
-    public class GetTodoItemByIdQuery : IRequest<TodoItem>
+    public class GetTodoItemByIdQuery : IRequest<TodoItemDto>
     {
         public Guid Id { get; set; }
     }

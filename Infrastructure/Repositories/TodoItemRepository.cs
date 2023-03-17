@@ -49,10 +49,10 @@ namespace Infrastructure.Repositories
             await _context.SaveChangesAsync();
         }
 
-        public async Task<IEnumerable<TodoItem>> GetAllWithCategoryAsync()
+
+        public async Task<IEnumerable<TodoItem>> GetAllTodoItemsWithCategoryAsync()
         {
             return await _context.TodoItems.Include(t => t.Category).ToListAsync();
         }
-
     }
 }

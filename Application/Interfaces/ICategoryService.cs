@@ -12,7 +12,7 @@ namespace Application.Interfaces
     {
         Task<CategoryDto> GetByIdAsync(Guid id);
         Task<List<CategoryDto>> GetAllAsync();
-        Task<CategoryDto> CreateAsync(CreateCategoryDto createCategoryDTO);
+        Task CreateAsync(CreateCategoryDto createCategoryDto);
         Task UpdateAsync(UpdateCategoryDto updateCategoryDTO);
         Task DeleteAsync(Guid id);
     }

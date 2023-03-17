@@ -1,0 +1,51 @@
+﻿@using Application.DTOs.Category;
+@using Application.Interfaces;
+
+@inject ICategoryService CategoryService
+
+<div class="form-group">
+    <label for="categoryDropdown">Select Category:</label>
+    <select @bind="SelectedCategoryId" id="categoryDropdown" class="form-control">
+        <option value="">-- Select a Category --</option>
+        @foreach (var category in Categories)
+        {
+            <option value="@category.Id">@category.Name</option>
+        }
+    </select>
+</div>
+
+<div class="form-group">
+    <label for="updatedCategoryName">New Name:</label>
+    <input @bind="UpdatedCategoryName" id="updatedCategoryName" class="form-control" />
+</div>
+
+<button @onclick="UpdateCategoryAsync" class="btn btn-primary" disabled="@(SelectedCategoryId == Guid.Empty || string.IsNullOrWhiteSpace(UpdatedCategoryName))">
+    Update Category
+</button>
+
+
+@code {
+    private List<CategoryDto> Categories { get; set; } = new();
+    private Guid SelectedCategoryId { get; set; }
+    private string UpdatedCategoryName { get; set; } = string.Empty;
+
+    protected override async Task OnInitializedAsync()
+    {
+        Categories = await CategoryService.GetAllAsync();
+    }
+
+    private async Task UpdateCategoryAsync()
+    {
+        var updateCategoryDto = new UpdateCategoryDto
+            {
+                Id = SelectedCategoryId,
+                Name = UpdatedCategoryName.Trim()
+            };
+
+        await CategoryService.UpdateAsync(updateCategoryDto);
+
+        // Clear the input and refresh the category list
+        UpdatedCategoryName = string.Empty;
+        Categories = await CategoryService.GetAllAsync();
+    }
+}

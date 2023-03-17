@@ -1,27 +1,28 @@
 ﻿using Application.Commands.Category;
 using Domain.Repositories;
 using MediatR;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+
 
 namespace Application.Handlers.CommandHandlers.Category
 {
     public class CreateCategoryHandler : IRequestHandler<CreateCategoryCommand, Guid>
     {
-        private readonly ICategoryRepository _categoryRepository;
+        private readonly ICategoryRepository _repository;
 
-        public CreateCategoryHandler(ICategoryRepository categoryRepository)
+        public CreateCategoryHandler(ICategoryRepository repository)
         {
-            _categoryRepository = categoryRepository;
+            _repository = repository;
         }
 
         public async Task<Guid> Handle(CreateCategoryCommand request, CancellationToken cancellationToken)
         {
+            if (string.IsNullOrWhiteSpace(request.Name))
+            {
+                throw new ArgumentException("Category name must not be empty or whitespace.");
+            }
+
             var category = new Domain.Entities.Category { Name = request.Name };
-            await _categoryRepository.AddAsync(category);
+            await _repository.AddAsync(category);
             return category.Id;
         }
     }

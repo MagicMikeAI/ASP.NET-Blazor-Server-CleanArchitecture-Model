@@ -1,4 +1,5 @@
 ﻿using Application.Commands.Todo;
+using Domain.Entities;
 using Domain.Repositories;
 using MediatR;
 using System;
@@ -22,17 +23,25 @@ namespace Application.Handlers.CommandHandlers.Todo
 
         public async Task<Unit> Handle(CreateTodoItemCommand request, CancellationToken cancellationToken)
         {
-            var category = await _categoryRepository.GetByIdAsync(request.CategoryId);
+            var category = await _categoryRepository.GetByIdAsync(request.TodoItemCreateDto.CategoryId);
 
             if (category == null)
             {
                 throw new ArgumentException("Invalid CategoryId");
             }
 
-            request.TodoItem.Category = category;
-            await _todoItemRepository.AddAsync(request.TodoItem);
+            var todoItem = new TodoItem
+            {
+                Title = request.TodoItemCreateDto.Title,
+                IsCompleted = request.TodoItemCreateDto.IsCompleted ?? false, //IsCompleted is set to false if the value is null.
+                Category = category
+            };
+
+            await _todoItemRepository.AddAsync(todoItem);
+
             return Unit.Value;
         }
     }
+
 
 }

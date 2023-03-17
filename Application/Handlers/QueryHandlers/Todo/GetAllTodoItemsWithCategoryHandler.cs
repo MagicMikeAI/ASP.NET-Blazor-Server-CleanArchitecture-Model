@@ -1,4 +1,6 @@
-﻿using Application.Queries.Todo;
+﻿using Application.DTOs.Todo;
+using Application.Queries.Todo;
+using Domain.Entities;
 using Domain.Repositories;
 using MediatR;
 using System;
@@ -9,7 +11,7 @@ using System.Threading.Tasks;
 
 namespace Application.Handlers.QueryHandlers.Todo
 {
-    public class GetAllTodoItemsWithCategoryHandler : IRequestHandler<GetAllTodoItemsWithCategoryQuery, IEnumerable<Domain.Entities.TodoItem>>
+    public class GetAllTodoItemsWithCategoryHandler : IRequestHandler<GetAllTodoItemsWithCategoryQuery, IEnumerable<TodoItemDto>>
     {
         private readonly ITodoItemRepository _todoItemRepository;
 
@@ -18,9 +20,19 @@ namespace Application.Handlers.QueryHandlers.Todo
             _todoItemRepository = todoItemRepository;
         }
 
-        public async Task<IEnumerable<Domain.Entities.TodoItem>> Handle(GetAllTodoItemsWithCategoryQuery request, CancellationToken cancellationToken)
+        public async Task<IEnumerable<TodoItemDto>> Handle(GetAllTodoItemsWithCategoryQuery request, CancellationToken cancellationToken)
         {
-            return await _todoItemRepository.GetAllWithCategoryAsync();
+            var todoItems = await _todoItemRepository.GetAllTodoItemsWithCategoryAsync();
+
+            return todoItems.Select(item => new TodoItemDto
+            {
+                Id = item.Id,
+                Title = item.Title,
+                IsCompleted = item.IsCompleted,
+                CategoryId = item.Category?.Id ?? Guid.Empty,
+                CategoryName = item.Category?.Name
+            });
         }
     }
+
 }

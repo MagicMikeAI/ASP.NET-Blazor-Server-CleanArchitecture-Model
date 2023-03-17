@@ -31,17 +31,10 @@ namespace Application.Services
             return await _mediator.Send(new GetAllCategoriesQuery());
         }
 
-        public async Task<CategoryDto> CreateAsync(CreateCategoryDto createCategoryDto)
+        public async Task CreateAsync(CreateCategoryDto createCategoryDto)
         {
-            Guid newCategoryId = await _mediator.Send(new CreateCategoryCommand(createCategoryDto.Name));
 
-            var newCategoryDto = new CategoryDto
-            {
-                Id = newCategoryId,
-                Name = createCategoryDto.Name
-            };
-
-            return newCategoryDto;
+            await _mediator.Send(new CreateCategoryCommand(createCategoryDto.Name.Trim()));
         }
 
         public async Task UpdateAsync(UpdateCategoryDto updateCategoryDto)
@@ -54,5 +47,7 @@ namespace Application.Services
         {
             await _mediator.Send(new DeleteCategoryCommand(id));
         }
+
+
     }
 }

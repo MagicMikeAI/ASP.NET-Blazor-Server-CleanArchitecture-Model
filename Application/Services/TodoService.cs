@@ -16,53 +16,16 @@ namespace Application.Services
             _mediator = mediator;
         }
 
-        public async Task CreateTodoItemAsync(CreateTodoItemCommand command)
-        {
-            await _mediator.Send(command);
-        }
+        public Task CreateTodoItemAsync(CreateTodoItemCommand command) => _mediator.Send(command);
 
-        public async Task UpdateTodoItemAsync(UpdateTodoItemCommand command)
-        {
-            await _mediator.Send(command);
-        }
+        public Task UpdateTodoItemAsync(UpdateTodoItemCommand command) => _mediator.Send(command);
 
-        public async Task DeleteTodoItemAsync(DeleteTodoItemCommand command)
-        {
-            await _mediator.Send(command);
-        }
+        public Task DeleteTodoItemAsync(DeleteTodoItemCommand command) => _mediator.Send(command);
 
-        public async Task<TodoItemDto> GetTodoItemByIdAsync(GetTodoItemByIdQuery query)
-        {
-            var todoItem = await _mediator.Send(query);
-            return new TodoItemDto
-            {
-                Id = todoItem.Id,
-                Title = todoItem.Title,
-                IsCompleted = todoItem.IsCompleted
-            };
-        }
+        public Task<TodoItemDto> GetTodoItemByIdAsync(GetTodoItemByIdQuery query) => _mediator.Send(query);
 
-        public async Task<IEnumerable<TodoItemDto>> GetAllTodoItemsAsync(GetAllTodoItemsQuery query)
-        {
-            var todoItems = await _mediator.Send(query);
-            return todoItems.Select(item => new TodoItemDto
-            {
-                Id = item.Id,
-                Title = item.Title,
-                IsCompleted = item.IsCompleted
-            });
-        }
-        public async Task<IEnumerable<TodoItemDto>> GetAllTodoItemsWithCategoryQuery(GetAllTodoItemsWithCategoryQuery query)
-        {
-            var todoItems = await _mediator.Send(query);
-            return todoItems.Select(item => new TodoItemDto
-            {
-                Id = item.Id,
-                Title = item.Title,
-                IsCompleted = item.IsCompleted,
-                CategoryId = item.CategoryId,
-                CategoryName = item.Category?.Name
-            });
-        }
+        public Task<IEnumerable<TodoItemDto>> GetAllTodoItemsAsync(GetAllTodoItemsQuery query) => _mediator.Send(query);
+
+        public Task<IEnumerable<TodoItemDto>> GetAllTodoItemsWithCategoryAsync(GetAllTodoItemsWithCategoryQuery query) => _mediator.Send(query);
     }
 }

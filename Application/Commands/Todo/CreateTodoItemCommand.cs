@@ -1,4 +1,4 @@
-﻿using Domain.Entities;
+﻿using Application.DTOs.Todo;
 using MediatR;
 using System;
 using System.Collections.Generic;
@@ -10,14 +10,15 @@ namespace Application.Commands.Todo
 {
     public class CreateTodoItemCommand : IRequest<Unit>
     {
-        public TodoItem TodoItem { get; set; }
-        public Guid CategoryId { get; set; }
+        public CreateTodoItemDto TodoItemCreateDto { get; set; }
 
-        public CreateTodoItemCommand(TodoItem todoItem, Guid categoryId)
+        public CreateTodoItemCommand(CreateTodoItemDto todoItemCreateDto)
         {
-            TodoItem = todoItem;
-            CategoryId = categoryId;
+            TodoItemCreateDto = todoItemCreateDto;
         }
     }
+
+
+
 
 }

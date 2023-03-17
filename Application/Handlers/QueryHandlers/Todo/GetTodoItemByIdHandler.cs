@@ -1,4 +1,5 @@
-﻿using Application.Queries.Todo;
+﻿using Application.DTOs.Todo;
+using Application.Queries.Todo;
 using Domain.Entities;
 using Domain.Repositories;
 using MediatR;
@@ -8,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace Application.Handlers.QueryHandlers.Todo
 {
-    public class GetTodoItemByIdHandler : IRequestHandler<GetTodoItemByIdQuery, TodoItem>
+    public class GetTodoItemByIdHandler : IRequestHandler<GetTodoItemByIdQuery, TodoItemDto>
     {
         private readonly ITodoItemRepository _repository;
 
@@ -17,9 +18,15 @@ namespace Application.Handlers.QueryHandlers.Todo
             _repository = repository;
         }
 
-        public async Task<TodoItem> Handle(GetTodoItemByIdQuery request, CancellationToken cancellationToken)
+        public async Task<TodoItemDto> Handle(GetTodoItemByIdQuery request, CancellationToken cancellationToken)
         {
-            return await _repository.GetByIdAsync(request.Id);
+            var todoItem = await _repository.GetByIdAsync(request.Id);
+            return new TodoItemDto
+            {
+                Id = todoItem.Id,
+                Title = todoItem.Title,
+                IsCompleted = todoItem.IsCompleted
+            };
         }
     }
 }
